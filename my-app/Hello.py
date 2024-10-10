@@ -1,10 +1,13 @@
-from flask import Flask
+from flask import Flask, render_template
+from markupsafe import escape
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return '<h1>Pagina de inicio</h1>'
+    name = None
+    friends = ['Ándres', 'Juan', 'Pedro']
+    return render_template('index.html', name = name, friends = friends)
 
 
 @app.route('/Hello')
@@ -17,3 +20,7 @@ def Hello(name = None, age = None):
         return f"<h1>Hola {name}"
     else:
         return f'Hola {name}, y tu edad es {age}'
+
+app.route('code/<path:code>')
+def code(code):
+    return f'<code> {escape(code)}</code>'
