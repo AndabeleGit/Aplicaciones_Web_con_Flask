@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from markupsafe import escape
 from datetime import datetime
 
@@ -42,6 +42,20 @@ def Hello(name = None, age = None, email = None):
     return render_template('hello.html',
                        datos = datos)
 
-app.route('code/<path:code>')
+@app.route('/code/<path:code>')
 def code(code):
     return f'<code> {escape(code)}</code>'
+
+@app.route('/auth/register', methods = ['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if len(username) >= 4 and len(username) <= 10 and len(password) >= 6 and len(password) <= 20:
+            return f'Nombre de usuario: {username}, Contraseña; {password}'
+        else:
+            error = """Nombre de usuario debe tener entre 4 y 10 caracteres y
+            la contraseña debe tener entre 6 y 20 caracteres"""
+            return render_template('register.html', error = error)
+    return render_template('register.html')
