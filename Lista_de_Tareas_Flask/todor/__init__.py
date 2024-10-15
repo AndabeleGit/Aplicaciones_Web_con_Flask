@@ -1,23 +1,32 @@
 from flask import Flask, render_template
-from . import todo, auth
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 def create_app():
-
     app = Flask(__name__)
 
-    # Configuracion del proyecto
+    # Configuración del proyecto
     app.config.from_mapping(
-        DEBUG = True,
-        SECRET_KEY = 'dev'
+        DEBUG=True,
+        SECRET_KEY='dev',
+        SQLALCHEMY_DATABASE_URI="sqlite:///todolist.db"
     )
 
-    # Registro Blueprint
+    db.init_app(app)
 
+    # Mover las importaciones aquí para evitar el ciclo de importación
+    from . import todo, auth
+
+    # Registro Blueprint
     app.register_blueprint(todo.bp)
     app.register_blueprint(auth.bp)
 
     @app.route('/')
     def index():
         return render_template('index.html')
+
+    with app.app_context():
+        db.create_all()
 
     return app
