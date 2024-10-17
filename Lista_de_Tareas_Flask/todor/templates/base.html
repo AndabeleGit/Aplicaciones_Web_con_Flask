@@ -17,8 +17,24 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-link" href="{{url_for('auth.register')}}">Registrarse</a>
-              <a class="nav-link" href="{{url_for('auth.login')}}">Inicio de Sesion</a>
+              {% if g.user %}
+              <li class="nav-item">
+                <span class="nav-link active"> {{g.user.username}} </span>
+              </li>
+              <li>
+                <a class="nav-link" href="{{url_for('todo.index')}}">Tareas</a>
+              </li>
+              <li>
+                <a class="nav-link" href="{{url_for('auth.logout')}}">Cerrar sesion</a>
+              </li>
+              {% else %}
+              <li>
+                <a class="nav-link" href="{{url_for('auth.register')}}">Registrarse</a>
+              </li>
+              <li>
+                <a class="nav-link" href="{{url_for('auth.login')}}">Inicio de Sesion</a>
+              </li>
+              {% endif %}
             </div>
           </div>
         </div>
